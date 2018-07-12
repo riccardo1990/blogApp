@@ -124,8 +124,9 @@ public class BlogResource {
      */
     @DeleteMapping("/blogs/{id}")
     @Timed
-    public ResponseEntity<Void> deleteBlog(@PathVariable Long id) {
+    public ResponseEntity<?> deleteBlog(@PathVariable Long id) {
         log.debug("REST request to delete Blog : {}", id);
+        Optional<Blog> blog = blogRepository.findById(id);
         if (blog.isPresent() && blog.get().getUser() != null &&
             !blog.get().getUser().getLogin().equals(SecurityUtils.getCurrentUserLogin().orElse(""))) {
             return new ResponseEntity<>("error.http.403", HttpStatus.FORBIDDEN);
